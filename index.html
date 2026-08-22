@@ -1,1 +1,1155 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#07111f">
+<title>Breath 2</title>
+
+<style>
+:root{
+  --bg1:#07111f;
+  --bg2:#10273a;
+  --ink:#f6fbff;
+  --muted:#a7bdcc;
+  --accent:#66e2d5;
+  --danger:#ff8f9b;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(102,226,213,.18),transparent 36%),
+    linear-gradient(180deg,var(--bg2),var(--bg1));
+  color:var(--ink);
+}
+
+body{display:flex;justify-content:center}
+
+.app{
+  width:min(100%,540px);
+  min-height:100vh;
+  padding:env(safe-area-inset-top) 18px calc(24px + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+}
+
+header{
+  padding:16px 2px 6px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  width:38px;
+  height:38px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  font-size:20px;
+  font-weight:900;
+  color:#07111f;
+  background:linear-gradient(135deg,var(--accent),#b7fff8);
+}
+
+h1{
+  margin:0;
+  font-size:21px;
+}
+
+.pill{
+  font-size:12px;
+  background:rgba(255,255,255,.08);
+  padding:8px 10px;
+  border-radius:999px;
+}
+
+.card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:30px;
+  padding:22px;
+  margin-top:14px;
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+}
+
+.center{text-align:center}
+
+.stage{
+  font-size:12px;
+  font-weight:800;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.16em;
+}
+
+.round{
+  color:var(--muted);
+  margin-top:8px;
+}
+
+.cue{
+  font-size:38px;
+  font-weight:900;
+  margin:16px 0 8px;
+  min-height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.counter{
+  font-size:74px;
+  font-weight:900;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:14px;
+  min-height:42px;
+}
+
+.orbwrap{
+  height:265px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+}
+
+.halo{
+  position:absolute;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(102,226,213,.20),transparent 65%);
+}
+
+.orb{
+  width:155px;
+  height:155px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 28%,
+    #ddfffb,
+    #8df2e7 18%,
+    #48b9c6 45%,
+    #225d7a 78%,
+    #15374f);
+  box-shadow:0 20px 55px rgba(58,190,201,.28);
+  transform:scale(.78);
+  transition:transform 1.75s ease-in-out;
+  z-index:1;
+}
+
+.orb.inhale{transform:scale(1.28)}
+.orb.exhale{transform:scale(.72)}
+.orb.hold{transform:scale(.98)}
+
+.buttons{
+  display:grid;
+  gap:11px;
+  margin-top:16px;
+}
+
+button{
+  border:0;
+  border-radius:18px;
+  padding:17px;
+  font-size:17px;
+  font-weight:850;
+}
+
+.primary{
+  background:linear-gradient(135deg,var(--accent),#8ff6ec);
+  color:#08202a;
+}
+
+.secondary{
+  background:rgba(255,255,255,.09);
+  color:white;
+}
+
+.warn{
+  background:rgba(255,143,155,.12);
+  color:#ffd2d8;
+}
+
+.hidden{display:none!important}
+
+.setting{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(255,255,255,.055);
+  border-radius:18px;
+  padding:13px 14px;
+  margin-top:12px;
+  text-align:left;
+}
+
+.setting small{
+  display:block;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.switch{
+  position:relative;
+  width:48px;
+  height:28px;
+  background:rgba(255,255,255,.15);
+  border-radius:99px;
+}
+
+.switch:after{
+  content:"";
+  position:absolute;
+  width:22px;
+  height:22px;
+  top:3px;
+  left:3px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
+}
+
+.switch.on{background:var(--accent)}
+.switch.on:after{left:23px}
+
+select{
+  width:145px;
+  background:#173247;
+  color:white;
+  border:0;
+  border-radius:12px;
+  padding:9px;
+}
+
+.safety{
+  color:#bcd0db;
+  background:rgba(255,255,255,.05);
+  border-radius:18px;
+  padding:13px;
+  margin-top:14px;
+  font-size:12px;
+  text-align:left;
+}
+
+.timer{
+  font-size:62px;
+  font-weight:900;
+}
+
+.doneScore{
+  font-size:23px;
+  line-height:1.55;
+}
+
+.history h2{
+  font-size:16px;
+}
+
+.historyRow{
+  display:flex;
+  justify-content:space-between;
+  padding:11px 0;
+  border-top:1px solid rgba(255,255,255,.07);
+  font-size:13px;
+}
+
+footer{
+  margin-top:auto;
+  padding-top:22px;
+  text-align:center;
+  color:#6f899b;
+  font-size:11px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+  <div class="brand">
+    <div class="logo">2</div>
+    <h1>Breath 2</h1>
+  </div>
+  <div class="pill">2 rounds • 20 breaths</div>
+</header>
+
+<section id="home" class="card center">
+
+<div class="stage">Daily breathing</div>
+
+<div class="cue">Ready?</div>
+
+<div class="sub">
+20 deep breaths → exhale hold → recovery inhale and 15-second hold. Repeat twice.
+</div>
+
+<div class="orbwrap">
+<div class="halo"></div>
+<div class="orb hold"></div>
+</div>
+
+<div class="setting" id="voiceToggle">
+<span>
+<strong>Voice guidance</strong>
+<small>Quiet coaching — not every breath</small>
+</span>
+
+<div class="switch on" id="voiceSwitch"></div>
+</div>
+
+<div class="setting">
+<span>
+<strong>Voice</strong>
+<small>Choose an iPhone voice</small>
+</span>
+
+<select id="voiceSelect">
+<option value="">Default</option>
+</select>
+</div>
+
+<div class="safety">
+<strong>Safety:</strong> Do this seated or lying down. Never do breath-hold exercises while driving, standing, swimming, bathing, or in/near water. Stop if you feel unwell.
+</div>
+
+<div class="buttons">
+<button class="primary" id="startBtn">Start Session</button>
+</div>
+
+</section>
+
+
+<section id="session" class="card center hidden">
+
+<div class="stage" id="stageLabel">Breathing</div>
+
+<div class="round" id="roundLabel">
+Round 1 of 2
+</div>
+
+<div class="cue" id="cue">
+Breathe In
+</div>
+
+<div class="counter" id="counter">1</div>
+
+<div class="sub" id="sub">
+Follow the circle.
+</div>
+
+<div class="orbwrap">
+<div class="halo"></div>
+<div class="orb" id="orb"></div>
+</div>
+
+<div class="timer hidden" id="timer">
+0:00
+</div>
+
+<div class="buttons">
+
+<button class="primary hidden" id="holdDoneBtn">
+End Hold
+</button>
+
+<button class="warn" id="stopBtn">
+End Session
+</button>
+
+</div>
+
+</section>
+
+
+<section id="done" class="card center hidden">
+
+<div class="stage">
+Session complete
+</div>
+
+<div class="cue">
+Great work.
+</div>
+
+<div class="doneScore" id="scores"></div>
+
+<div class="buttons">
+
+<button class="primary" id="againBtn">
+Do It Again
+</button>
+
+<button class="secondary" id="homeBtn">
+Back Home
+</button>
+
+</div>
+
+</section>
+
+
+<section class="card history">
+
+<h2>Recent sessions</h2>
+
+<div id="history"></div>
+
+</section>
+
+<footer>
+Private • Saved only on this device
+</footer>
+
+</div>
+
+
+<script>
+
+(() => {
+
+const BREATH_IN_MS = 1800;
+const BREATH_OUT_MS = 1800;
+const BREATHS = 20;
+const RECOVERY_MS = 15000;
+
+let round=1;
+let breath=1;
+let cancelled=false;
+let holdStart=0;
+let holdTicker=null;
+let holdTimes=[];
+let voiceOn=true;
+
+let selectedVoiceName =
+localStorage.getItem('breathVoice') || '';
+
+const $ = id =>
+document.getElementById(id);
+
+const home=$('home');
+const session=$('session');
+const done=$('done');
+
+const stageLabel=$('stageLabel');
+const roundLabel=$('roundLabel');
+const cue=$('cue');
+const counter=$('counter');
+const sub=$('sub');
+const orb=$('orb');
+const timer=$('timer');
+const holdDoneBtn=$('holdDoneBtn');
+const voiceSelect=$('voiceSelect');
+
+
+function sleep(ms){
+return new Promise(r=>setTimeout(r,ms));
+}
+
+function show(el){
+el.classList.remove('hidden');
+}
+
+function hide(el){
+el.classList.add('hidden');
+}
+
+function setOrb(p){
+orb.className='orb '+p;
+}
+
+function format(ms){
+
+const s=Math.max(
+0,
+Math.floor(ms/1000)
+);
+
+return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+
+}
+
+
+function getSelectedVoice(){
+
+if(!('speechSynthesis' in window))
+return null;
+
+const voices=
+speechSynthesis.getVoices();
+
+if(selectedVoiceName){
+
+const match=
+voices.find(v=>
+v.name===selectedVoiceName
+);
+
+if(match)
+return match;
+
+}
+
+return voices.find(v=>
+v.lang &&
+v.lang.toLowerCase().startsWith('en')
+) || null;
+
+}
+
+
+function speak(text){
+
+if(
+!voiceOn ||
+!('speechSynthesis' in window)
+)
+return;
+
+speechSynthesis.cancel();
+
+const u=
+new SpeechSynthesisUtterance(text);
+
+const voice=
+getSelectedVoice();
+
+if(voice)
+u.voice=voice;
+
+u.rate=.92;
+u.pitch=1;
+u.volume=1;
+
+speechSynthesis.speak(u);
+
+}
+
+
+function loadVoices(){
+
+if(!('speechSynthesis' in window))
+return;
+
+const voices=
+speechSynthesis
+.getVoices()
+.filter(v=>
+v.lang &&
+v.lang.toLowerCase().startsWith('en')
+);
+
+voiceSelect.innerHTML=
+'<option value="">Default</option>';
+
+voices.forEach(v=>{
+
+const option=
+document.createElement('option');
+
+option.value=v.name;
+option.textContent=v.name;
+
+voiceSelect.appendChild(option);
+
+});
+
+if(selectedVoiceName)
+voiceSelect.value=
+selectedVoiceName;
+
+}
+
+
+if('speechSynthesis' in window){
+
+loadVoices();
+
+speechSynthesis.onvoiceschanged=
+loadVoices;
+
+}
+
+
+voiceSelect.addEventListener(
+'change',
+()=>{
+
+selectedVoiceName=
+voiceSelect.value;
+
+localStorage.setItem(
+'breathVoice',
+selectedVoiceName
+);
+
+if(selectedVoiceName)
+speak('Voice selected.');
+
+});
+
+
+async function startSession(){
+
+cancelled=false;
+round=1;
+holdTimes=[];
+
+hide(home);
+hide(done);
+show(session);
+
+speak('Beginning round one.');
+
+for(
+round=1;
+round<=2 && !cancelled;
+round++
+){
+
+roundLabel.textContent=
+`Round ${round} of 2`;
+
+if(round===2)
+speak('Beginning round two.');
+
+await breathingCycle();
+
+if(cancelled) break;
+
+await exhaleHold();
+
+if(cancelled) break;
+
+await recoveryHold();
+
+if(cancelled) break;
+
+}
+
+if(!cancelled)
+finish();
+
+}
+
+
+async function breathingCycle(){
+
+stageLabel.textContent=
+'Breathing';
+
+hide(timer);
+hide(holdDoneBtn);
+
+counter.classList.remove(
+'hidden'
+);
+
+sub.textContent=
+'Follow the circle. In as it grows, out as it shrinks.';
+
+for(
+breath=1;
+breath<=BREATHS && !cancelled;
+breath++
+){
+
+counter.textContent=
+breath;
+
+cue.textContent=
+'Breathe In';
+
+setOrb('inhale');
+
+
+if(breath===1)
+speak('Breathe in.');
+
+if(breath===8)
+speak('Great job. Keep going.');
+
+if(breath===16)
+speak('Almost there. Stay relaxed.');
+
+if(breath===20)
+speak('Last breath. Deep breath in.');
+
+
+await sleep(
+BREATH_IN_MS
+);
+
+if(cancelled)
+return;
+
+
+cue.textContent=
+'Breathe Out';
+
+setOrb('exhale');
+
+
+if(
+breath===1 ||
+breath===20
+)
+speak('Breathe out.');
+
+
+await sleep(
+BREATH_OUT_MS
+);
+
+}
+
+}
+
+
+async function exhaleHold(){
+
+stageLabel.textContent=
+'Breath Hold';
+
+cue.textContent=
+'Exhale & Hold';
+
+sub.textContent=
+'Stay relaxed. Tap End Hold when you need to breathe.';
+
+counter.classList.add(
+'hidden'
+);
+
+show(timer);
+show(holdDoneBtn);
+
+setOrb('hold');
+
+speak(
+'Exhale and hold. Stay relaxed.'
+);
+
+holdStart=
+Date.now();
+
+timer.textContent=
+'0:00';
+
+holdTicker=
+setInterval(()=>{
+
+timer.textContent=
+format(
+Date.now()-holdStart
+);
+
+},250);
+
+
+await new Promise(resolve=>{
+
+const doneHold=()=>{
+
+holdDoneBtn.removeEventListener(
+'click',
+doneHold
+);
+
+resolve();
+
+};
+
+holdDoneBtn.addEventListener(
+'click',
+doneHold
+);
+
+});
+
+
+clearInterval(
+holdTicker
+);
+
+holdTicker=null;
+
+const elapsed=
+Date.now()-holdStart;
+
+holdTimes.push(
+elapsed
+);
+
+timer.textContent=
+format(elapsed);
+
+hide(
+holdDoneBtn
+);
+
+}
+
+
+async function recoveryHold(){
+
+stageLabel.textContent=
+'Recovery Breath';
+
+cue.textContent=
+'Deep Breath In';
+
+sub.textContent=
+'Fill your lungs, then hold for 15 seconds.';
+
+setOrb('inhale');
+
+speak(
+'Deep breath in. Hold for fifteen seconds.'
+);
+
+await sleep(1400);
+
+if(cancelled)
+return;
+
+setOrb('hold');
+
+cue.textContent=
+'Hold';
+
+const start=
+Date.now();
+
+
+while(
+Date.now()-start <
+RECOVERY_MS &&
+!cancelled
+){
+
+const remain=
+Math.ceil(
+(
+RECOVERY_MS -
+(Date.now()-start)
+)/1000
+);
+
+timer.textContent=
+`0:${String(
+Math.max(0,remain)
+).padStart(2,'0')}`;
+
+
+if(
+[5,3,2,1]
+.includes(remain)
+)
+speak(String(remain));
+
+
+await sleep(250);
+
+}
+
+
+if(cancelled)
+return;
+
+
+cue.textContent=
+round===1
+?'Round 1 Complete'
+:'Round 2 Complete';
+
+
+sub.textContent=
+round===1
+?'Release. Round 2 begins in a moment.'
+:'Release and relax.';
+
+
+setOrb('exhale');
+
+
+speak(
+round===1
+?'Great job. Round one complete.'
+:'Round two complete.'
+);
+
+
+await sleep(
+round===1
+?2500
+:1200
+);
+
+}
+
+
+function finish(){
+
+hide(session);
+show(done);
+
+const a=
+format(
+holdTimes[0]||0
+);
+
+const b=
+format(
+holdTimes[1]||0
+);
+
+
+$('scores').innerHTML=
+
+`Round 1 hold: <strong>${a}</strong><br>
+Round 2 hold: <strong>${b}</strong>`;
+
+
+saveHistory(
+holdTimes
+);
+
+renderHistory();
+
+speak(
+'Session complete. Great work.'
+);
+
+}
+
+
+function stop(){
+
+cancelled=true;
+
+clearInterval(
+holdTicker
+);
+
+holdTicker=null;
+
+if(
+'speechSynthesis' in window
+)
+speechSynthesis.cancel();
+
+hide(session);
+hide(done);
+show(home);
+
+}
+
+
+function saveHistory(times){
+
+const hist=
+JSON.parse(
+localStorage.getItem(
+'breathHistory'
+)||'[]'
+);
+
+hist.unshift({
+
+date:
+new Date().toISOString(),
+
+holds:
+times
+
+});
+
+
+localStorage.setItem(
+
+'breathHistory',
+
+JSON.stringify(
+hist.slice(0,14)
+)
+
+);
+
+}
+
+
+function dayLabel(date){
+
+const d=
+new Date(date);
+
+const today=
+new Date();
+
+const yesterday=
+new Date();
+
+yesterday.setDate(
+today.getDate()-1
+);
+
+
+const sameDay=(a,b)=>
+
+a.getFullYear()===
+b.getFullYear()
+
+&&
+
+a.getMonth()===
+b.getMonth()
+
+&&
+
+a.getDate()===
+b.getDate();
+
+
+if(
+sameDay(d,today)
+)
+return 'Today';
+
+
+if(
+sameDay(d,yesterday)
+)
+return 'Yesterday';
+
+
+return d.toLocaleDateString(
+[],
+{
+month:'short',
+day:'numeric'
+}
+);
+
+}
+
+
+function renderHistory(){
+
+const hist=
+JSON.parse(
+localStorage.getItem(
+'breathHistory'
+)||'[]'
+);
+
+const el=
+$('history');
+
+
+if(!hist.length){
+
+el.innerHTML=
+'<div style="color:#a7bdcc;font-size:13px">Your completed sessions will appear here.</div>';
+
+return;
+
+}
+
+
+el.innerHTML=
+hist.map(x=>{
+
+return `
+
+<div class="historyRow">
+
+<span>
+${dayLabel(x.date)}
+</span>
+
+<span>
+R1 ${format(x.holds?.[0]||0)}
+&nbsp; • &nbsp;
+R2 ${format(x.holds?.[1]||0)}
+</span>
+
+</div>
+
+`;
+
+}).join('');
+
+}
+
+
+$('startBtn').onclick=
+startSession;
+
+$('againBtn').onclick=
+startSession;
+
+$('homeBtn').onclick=
+()=>{
+
+hide(done);
+show(home);
+
+};
+
+$('stopBtn').onclick=
+stop;
+
+
+$('voiceToggle').onclick=
+()=>{
+
+voiceOn=
+!voiceOn;
+
+$('voiceSwitch')
+.classList.toggle(
+'on',
+voiceOn
+);
+
+if(
+!voiceOn &&
+'speechSynthesis' in window
+)
+speechSynthesis.cancel();
+
+};
+
+
+renderHistory();
+
+})();
+
+</script>
+
+</body>
+</html>
